@@ -1,4 +1,7 @@
-﻿using System;
+﻿/*********************************************/
+//原型模式 
+/*********************************************/
+using System;
 using System.Text;
 
 namespace PrototypePattern
@@ -10,27 +13,48 @@ namespace PrototypePattern
             //解决中文问题
             Console.OutputEncoding = Encoding.UTF8;
 
-
-            #region 浅复制
+            #region 浅克隆   
+            Console.WriteLine("浅克隆开始......");
             //第一份简历
             Resume r1 = new Resume("小明");
             r1.PersonalInfo("男", "22");
             r1.PersonalExprience("2008-2010", "XX公司");
             //第二份简历，重新设置工作经历
-            Resume r2 = (Resume)r1.Clone();
+            Resume r2 = (Resume)r1.Clone(false);
             r2.PersonalExprience("2010-2012", "YY公司");
             //第三份简历，也重新设置工作简历
-            Resume r3 = (Resume)r1.Clone();
+            Resume r3 = (Resume)r1.Clone(false);
             r3.PersonalExprience("2012-2014", "ZZ公司");
             //三份简历依次进行打印
             r1.Display();
             r2.Display();
             r3.Display();
-            Console.WriteLine("因浅复制只是复制了对象的引用，所以三条工作简历最后都相同");
+
+            Console.WriteLine("浅克隆结束......");
+
             #endregion
 
+            #region 深克隆
+            Console.WriteLine("深克隆开始......");
+            //第一份简历
+            Resume deepr1 = new Resume("小明");
+            deepr1.PersonalInfo("男", "22");
+            deepr1.PersonalExprience("2008-2010", "XX公司");
+            //第二份简历，重新设置工作经历
+            Resume deepr2 = (Resume)deepr1.Clone(true);
+            deepr2.PersonalExprience("2010-2012", "YY公司");
+            //第三份简历，也重新设置工作简历
+            Resume deepr3 = (Resume)deepr1.Clone(true);
+            deepr3.PersonalExprience("2012-2014", "ZZ公司");
+            //三份简历依次进行打印
+            deepr1.Display();
+            deepr2.Display();
+            deepr3.Display();
+            Console.WriteLine("深克隆结束......");
+            #endregion
 
             Console.ReadKey();
+
         }
 
         //工作经历
@@ -52,6 +76,7 @@ namespace PrototypePattern
             {
                 return (object)this.MemberwiseClone();
             }
+
         }
 
         //简历
@@ -65,10 +90,10 @@ namespace PrototypePattern
             {
                 this.name = name;
                 work = new WorkExprience();
-            } 
-            public Resume(WorkExperience work)
+            }
+            public Resume(WorkExprience work)
             {
-                this.work = (WorkExperience)work.Clone();//提供Clone方法调用的私有构造函数，一边克隆“工作经历”的数据
+                this.work = (WorkExprience)work.Clone();//提供Clone方法调用的私有构造函数，一边克隆“工作经历”的数据
             }
             //设置个人信息
             public void PersonalInfo(string sex, string age)
@@ -91,27 +116,22 @@ namespace PrototypePattern
                 Console.WriteLine("工作经历：{0},{1}", work.WorkData, work.Company);
             }
 
-            /// <summary>
-            /// 定义克隆方法
-            /// </summary>
-            /// <param name="Deep">是否深克隆</param>
-            /// <returns></returns>
-            public object Clone(bool Deep)
+            //定义自己的克隆方法
+            public object Clone(bool deep)
             {
-                if (Deep)
+                if (deep)
                 {
+
                     Resume obj = new Resume(this.work);//调用私有的构造方法，让“工作经历”克隆完成，然后再给这个简历对象的相关字段赋值，最终返回一个深复制的简历对象
                     obj.name = this.name;
                     obj.sex = this.sex;
                     obj.age = this.age;
                     return obj;
-                   
+
                 }
-                else
-                {
-                    return (Resume)this.MemberwiseClone();
-                }
+                return (Resume)this.MemberwiseClone();
             }
+
         }
     }
 }

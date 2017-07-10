@@ -1,4 +1,7 @@
-﻿using System;
+﻿/*********************************************/
+//构造者模式 
+/*********************************************/
+using System;
 using System.Collections.Generic;
 using System.Text;
 

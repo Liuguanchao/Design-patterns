@@ -2,6 +2,7 @@
 //适配器模式 
 /*********************************************/
 using System;
+using System.Text;
 
 namespace AdapterPattern
 {
